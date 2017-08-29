@@ -7,6 +7,7 @@ class Elf
         @location = [0, 0] # airdropped coordinates
         @compass = ['N', 'E', 'S', 'W'] # compass headings, sorted clockwise
         @facing = 'N' # face North per instructions
+	@visited = [] # list of locations visited
     end
 
     # Turn to the left or right
@@ -18,7 +19,6 @@ class Elf
             # change to previous heading
             new_facing = wrap_compass(@compass.index(@facing) - 1)
         end
-
         @facing = @compass[new_facing]
     end
 
@@ -56,6 +56,13 @@ class Elf
             # walk blocks: 2nd character to end
             blocks = instruction[1..-1].to_i
             walk(blocks)
+            # check whether this is Easter Bunny HQ
+            if @visited.include? @location
+              break
+            end
+            # record new location
+            @visited << @location
+            puts @visited.to_s
         end
     end
 
