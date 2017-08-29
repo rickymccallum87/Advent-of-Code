@@ -7,7 +7,6 @@ class Elf
         @location = [0, 0] # airdropped coordinates
         @compass = ['N', 'E', 'S', 'W'] # compass headings, sorted clockwise
         @facing = 'N' # face North per instructions
-        @destination = [] # unknown
     end
 
     # Turn to the left or right
@@ -21,7 +20,6 @@ class Elf
             new_facing = wrap_compass(@compass.index(@facing) - 1)
         end
 
-        puts new_facing
         @facing = @compass[new_facing]
     end
 
@@ -62,13 +60,19 @@ class Elf
         end
     end
 
-    # Calculate destination's distance from the starting point
-    def distance destination
-        return abs(@destination[0]) + abs(@destination[1])
+    # Calculate location's distance from the starting point
+    def distance
+        @location[0].abs + @location[1].abs
+    end
+
+    # Report back to Santa where instructions led
+    def report
+        @location
     end
 
 end
 
 elf = Elf.new
 elf.follow(sequence)
-puts elf.destination
+puts elf.report
+puts elf.distance
