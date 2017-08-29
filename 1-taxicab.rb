@@ -15,9 +15,24 @@ class Elf
         # find current heading on compass
         if direction == 'R'
             # change to next heading
+            new_facing = wrap_compass(@compass.index(@facing) + 1)
         elsif direction == 'L'
             # change to previous heading
+            new_facing = wrap_compass(@compass.index(@facing) - 1)
         end
+
+        puts new_facing
+        @facing = @compass[new_facing]
+    end
+
+    # Wrap around compass 'clockface' if necessary
+    def wrap_compass new_facing
+        if new_facing == -1
+            new_facing = 3
+        elsif new_facing == 4
+            new_facing = 0
+        end
+        new_facing
     end
 
     # Walk forward specified number of blocks
@@ -34,17 +49,26 @@ class Elf
         end
     end
 
+    # Follow instructions programmatically
+    def follow sequence
+        # Check each instruction
+        for instruction in sequence
+            # turn direction: first character
+            direction = instruction[0]
+            turn(direction)
+            # walk blocks: 2nd character to end
+            blocks = instruction[1..-1].to_i
+            walk(blocks)
+        end
+    end
+
     # Calculate destination's distance from the starting point
     def distance destination
         return abs(@destination[0]) + abs(@destination[1])
     end
 
-    # Follow instructions programmatically
-    def follow sequence
-        # Check each instruction
-        for i in sequence
-            # turn direction (sequence[i][0])
-            # walk blocks
-        end
-    end
 end
+
+elf = Elf.new
+elf.follow(sequence)
+puts elf.destination
