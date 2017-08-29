@@ -73,8 +73,7 @@ elf = Elf.new
 elf.follow(sequence)
 
 # Report the new location back to Santa
-puts elf.report
+puts 'Destination: x=' + elf.report[0].to_s + ' y=' + elf.report[1].to_s
 
 # Calculate elf's distance from the starting point
-distance = elf.report[0].abs + elf.report[1].abs
-puts distance
+puts 'Distance: ' + (elf.report[0].abs + elf.report[1].abs).to_s + ' blocks'
