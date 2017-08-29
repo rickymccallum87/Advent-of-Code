@@ -11,7 +11,6 @@ class Elf
 
     # Turn to the left or right
     def turn direction
-        # find current heading on compass
         if direction == 'R'
             # change to next heading
             new_facing = wrap_compass(@compass.index(@facing) + 1)
@@ -60,19 +59,22 @@ class Elf
         end
     end
 
-    # Calculate location's distance from the starting point
-    def distance
-        @location[0].abs + @location[1].abs
-    end
-
-    # Report back to Santa where instructions led
+    # Report current location
     def report
         @location
     end
 
 end
 
+# Airdrop an elf into the city
 elf = Elf.new
+
+# Have elf follow the instructions
 elf.follow(sequence)
+
+# Report the new location back to Santa
 puts elf.report
-puts elf.distance
+
+# Calculate elf's distance from the starting point
+distance = elf.report[0].abs + elf.report[1].abs
+puts distance
