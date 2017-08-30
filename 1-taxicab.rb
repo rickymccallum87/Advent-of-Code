@@ -8,6 +8,22 @@ class Elf
         @compass = ['N', 'E', 'S', 'W'] # compass headings, sorted clockwise
         @facing = 'N' # face North per instructions
 	@visited = [] # list of locations visited
+        @visited_twice = [] # list of locations re-visited
+    end
+
+    # Follow instructions programmatically
+    def follow sequence
+        # Check each instruction
+        for instruction in sequence
+            # get first character
+            direction = instruction[0]
+            # print 't'+direction # DEBUG
+            turn(direction)
+            # get 2nd character to end
+            blocks = instruction[1..-1].to_i
+            # print blocks.to_s+'b' # DEBUG
+            walk(blocks)
+        end
     end
 
     # Turn to the left or right
@@ -20,13 +36,14 @@ class Elf
             new_facing = wrap_compass(@compass.index(@facing) - 1)
         end
         @facing = @compass[new_facing]
+        # print 'f'+@facing # DEBUG
     end
 
     # Wrap around compass 'clockface' if necessary
     def wrap_compass new_facing
-        if new_facing == -1
+        if new_facing < 0
             new_facing = 3
-        elsif new_facing == 4
+        elsif new_facing > 3
             new_facing = 0
         end
         new_facing
@@ -34,41 +51,36 @@ class Elf
 
     # Walk forward specified number of blocks
     def walk blocks
-        # based on current heading
-        if @facing == 'N'
-            @location[1] += blocks
-        elsif @facing == 'E'
-            @location[0] += blocks
-        elsif @facing == 'S'
-            @location[1] -= blocks
-        elsif @facing == 'W'
-            @location[0] -= blocks
-        end
-    end
-
-    # Follow instructions programmatically
-    def follow sequence
-        # Check each instruction
-        for instruction in sequence
-            # turn direction: first character
-            direction = instruction[0]
-            turn(direction)
-            # walk blocks: 2nd character to end
-            blocks = instruction[1..-1].to_i
-            walk(blocks)
+        (1..blocks).each do
+            # based on current heading, move 1 block
+            if @facing == 'N'
+                @location[1] += 1
+            elsif @facing == 'E'
+                @location[0] += 1
+            elsif @facing == 'S'
+                @location[1] -= 1
+            elsif @facing == 'W'
+                @location[0] -= 1
+            end
             # check whether this is Easter Bunny HQ
             if @visited.include? @location
-              break
+                @visited_twice.push(@location.dup)
+                # print 'BHQ:'+@location.to_s+'!' # DEBUG
             end
-            # record new location
-            @visited << @location
-            puts @visited.to_s
+            # print @location.to_s # DEBUG
+            # record locations visited
+            @visited.push(@location.dup)
         end
     end
 
     # Report current location
-    def report
+    def location
         @location
+    end
+
+    # Report Easter Bunny HQ location
+    def bunny_HQ
+        @visited_twice.first
     end
 
 end
@@ -79,8 +91,14 @@ elf = Elf.new
 # Have elf follow the instructions
 elf.follow(sequence)
 
-# Report the new location back to Santa
-puts 'Destination: x=' + elf.report[0].to_s + ' y=' + elf.report[1].to_s
+# Report back to Santa where the instructions led
+puts 'Destination: ' + elf.location.to_s
 
 # Calculate elf's distance from the starting point
-puts 'Distance: ' + (elf.report[0].abs + elf.report[1].abs).to_s + ' blocks'
+puts '(' + (elf.location[0].abs + elf.location[1].abs).to_s + ' blocks away)'
+
+# Report location of Easter Bunny HQ
+puts 'Easter Bunny HQ: ' + elf.bunny_HQ.to_s
+
+# Calculate Easter Bunny HQ's distance from the starting point
+puts '(' + (elf.bunny_HQ[0].abs + elf.bunny_HQ[1].abs).to_s + ' blocks away)'
