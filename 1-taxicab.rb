@@ -54,18 +54,18 @@ class Elf
         (1..blocks).each do
             # based on current heading, move 1 block
             if @facing == 'N'
-                @location[1] += 1
+                @location[1] += 1 # y+
             elsif @facing == 'E'
-                @location[0] += 1
+                @location[0] += 1 # x+
             elsif @facing == 'S'
-                @location[1] -= 1
+                @location[1] -= 1 # y-
             elsif @facing == 'W'
-                @location[0] -= 1
+                @location[0] -= 1 # x-
             end
             # check whether this is Easter Bunny HQ
             if @visited.include? @location
                 @visited_twice.push(@location.dup)
-                # print 'BHQ:'+@location.to_s+'!' # DEBUG
+                # print 'x'+@location.to_s # DEBUG
             end
             # print @location.to_s # DEBUG
             # record locations visited
